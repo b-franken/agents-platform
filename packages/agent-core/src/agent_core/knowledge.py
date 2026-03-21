@@ -66,7 +66,8 @@ async def _upload_files(openai_client: AsyncOpenAI, docs: list[Path]) -> list[st
         try:
             with doc.open("rb") as f:
                 uploaded = await openai_client.files.create(
-                    file=f, purpose="user_data",
+                    file=f,
+                    purpose="user_data",
                 )
             file_ids.append(uploaded.id)
             print(f"OK ({uploaded.id})")
@@ -89,7 +90,9 @@ async def _create_store(openai_client: AsyncOpenAI, name: str) -> str | None:
 
 
 async def _add_files(
-    openai_client: AsyncOpenAI, store_id: str, file_ids: list[str],
+    openai_client: AsyncOpenAI,
+    store_id: str,
+    file_ids: list[str],
 ) -> int:
     failed = 0
     for fid in file_ids:

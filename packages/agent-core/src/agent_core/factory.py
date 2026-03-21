@@ -71,9 +71,7 @@ def create_client(model: str | None = None) -> AzureOpenAIResponsesClient:
     _init_observability()
 
     deployment_name = (
-        model
-        or os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME")
-        or "gpt-4.1"
+        model or os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME") or "gpt-4.1"
     )
     api_key = os.getenv("AZURE_OPENAI_API_KEY")
     endpoint = os.getenv("AZURE_AI_PROJECT_ENDPOINT")

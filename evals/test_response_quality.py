@@ -39,7 +39,7 @@ QUALITY_CASES = [
     ),
     (
         "infra-analyzer-agent",
-        'Scan this Terraform: resource'
+        "Scan this Terraform: resource"
         ' "azurerm_storage_account" "main"'
         ' { name = "test" }',
         ["encryption", "tag"],

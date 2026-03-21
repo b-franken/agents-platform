@@ -23,10 +23,7 @@ import yaml
 from mcp.server.fastmcp import FastMCP
 
 KNOWLEDGE_DIR = (
-    Path(__file__).resolve().parent.parent.parent
-    / "agents"
-    / "helpdesk"
-    / "knowledge"
+    Path(__file__).resolve().parent.parent.parent / "agents" / "helpdesk" / "knowledge"
 )
 
 mcp = FastMCP("helpdesk-kb")
@@ -77,9 +74,7 @@ def list_articles() -> str:
     """List all available knowledge base articles."""
     if not ARTICLES:
         return "No articles available."
-    return "\n".join(
-        f"[{a['id']}] {a['title']}" for a in ARTICLES
-    )
+    return "\n".join(f"[{a['id']}] {a['title']}" for a in ARTICLES)
 
 
 if __name__ == "__main__":

@@ -40,14 +40,19 @@ class TestCreateClient:
     @patch("agent_core.factory.AzureOpenAIResponsesClient")
     @patch.dict(
         "os.environ",
-        {"AZURE_AI_PROJECT_ENDPOINT": "https://hub.services.ai.azure.com/api/projects/my-project"},
+        {
+            "AZURE_AI_PROJECT_ENDPOINT": "https://hub.services.ai.azure.com/api/projects/my-project"
+        },
         clear=True,
     )
     def test_credential_with_project_endpoint(self, mock_client_cls) -> None:
         create_client()
         call_kwargs = mock_client_cls.call_args.kwargs
         assert call_kwargs["deployment_name"] == "gpt-4.1"
-        assert call_kwargs["project_endpoint"] == "https://hub.services.ai.azure.com/api/projects/my-project"
+        assert (
+            call_kwargs["project_endpoint"]
+            == "https://hub.services.ai.azure.com/api/projects/my-project"
+        )
         assert "credential" in call_kwargs
 
     @patch("agent_core.factory.AzureOpenAIResponsesClient")

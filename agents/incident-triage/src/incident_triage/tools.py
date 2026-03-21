@@ -13,12 +13,21 @@ from pydantic import Field
 
 _SEVERITY_KEYWORDS: dict[str, list[str]] = {
     "P1": [
-        "outage", "down", "unavailable", "critical",
-        "breach", "data loss", "production down",
+        "outage",
+        "down",
+        "unavailable",
+        "critical",
+        "breach",
+        "data loss",
+        "production down",
     ],
     "P2": [
-        "degraded", "slow", "intermittent", "partial",
-        "high latency", "errors spiking",
+        "degraded",
+        "slow",
+        "intermittent",
+        "partial",
+        "high latency",
+        "errors spiking",
     ],
     "P3": ["minor", "cosmetic", "workaround", "low impact", "single user"],
     "P4": ["question", "request", "enhancement", "documentation", "informational"],
@@ -26,20 +35,39 @@ _SEVERITY_KEYWORDS: dict[str, list[str]] = {
 
 _IMPACT_KEYWORDS: dict[str, list[str]] = {
     "infrastructure": [
-        "database", "server", "network", "dns",
-        "load balancer", "disk", "cpu", "memory",
+        "database",
+        "server",
+        "network",
+        "dns",
+        "load balancer",
+        "disk",
+        "cpu",
+        "memory",
     ],
     "application": [
-        "api", "deployment", "service", "endpoint",
-        "timeout", "error rate", "500",
+        "api",
+        "deployment",
+        "service",
+        "endpoint",
+        "timeout",
+        "error rate",
+        "500",
     ],
     "security": [
-        "breach", "unauthorized", "vulnerability",
-        "exploit", "credentials", "leaked",
+        "breach",
+        "unauthorized",
+        "vulnerability",
+        "exploit",
+        "credentials",
+        "leaked",
     ],
     "networking": [
-        "network", "dns", "connectivity", "latency",
-        "packet loss", "firewall",
+        "network",
+        "dns",
+        "connectivity",
+        "latency",
+        "packet loss",
+        "firewall",
     ],
 }
 
@@ -154,15 +182,17 @@ def classify_incident(
     incident_id = f"INC-{uuid.uuid4().hex[:8].upper()}"
     timestamp = datetime.now(tz=UTC).strftime("%Y-%m-%d %H:%M UTC")
 
-    _incident_history.append({
-        "id": incident_id,
-        "description": description,
-        "severity": severity,
-        "impact_area": impact_area,
-        "team": team,
-        "runbook": runbook,
-        "created_at": timestamp,
-    })
+    _incident_history.append(
+        {
+            "id": incident_id,
+            "description": description,
+            "severity": severity,
+            "impact_area": impact_area,
+            "team": team,
+            "runbook": runbook,
+            "created_at": timestamp,
+        }
+    )
 
     return (
         f"Incident classified.\n"

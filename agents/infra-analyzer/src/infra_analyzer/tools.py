@@ -20,20 +20,15 @@ _RULES: list[dict[str, str | Severity | str]] = [
             r'resource\s+"azurerm_storage_account"[^}]*?'
             r"(?!enable_https_traffic_only\s*=\s*true)"
         ),
-        "search": (
-            r'resource\s+"azurerm_storage_account"\s+"(\w+)"'
-        ),
+        "search": (r'resource\s+"azurerm_storage_account"\s+"(\w+)"'),
         "negative_pattern": (
             r"encryption"
             r"|enable_https_traffic_only\s*=\s*true"
             r"|min_tls_version"
         ),
-        "message": (
-            "Storage account missing encryption configuration"
-        ),
+        "message": ("Storage account missing encryption configuration"),
         "recommendation": (
-            "Add enable_https_traffic_only = true"
-            ' and min_tls_version = "TLS1_2"'
+            'Add enable_https_traffic_only = true and min_tls_version = "TLS1_2"'
         ),
     },
     {
@@ -56,23 +51,17 @@ _RULES: list[dict[str, str | Severity | str]] = [
         "negative_pattern": r"tags\s*=\s*\{",
         "message": "Resource missing tags",
         "recommendation": (
-            "Add tags block with at least environment,"
-            " owner, and cost-center tags"
+            "Add tags block with at least environment, owner, and cost-center tags"
         ),
     },
     {
         "id": "NO_LOGGING",
         "severity": Severity.MEDIUM,
-        "pattern": (
-            r'resource\s+"azurerm_storage_account"\s+"(\w+)"'
-        ),
-        "negative_pattern": (
-            r"logging|diagnostic_setting|monitor_diagnostic"
-        ),
+        "pattern": (r'resource\s+"azurerm_storage_account"\s+"(\w+)"'),
+        "negative_pattern": (r"logging|diagnostic_setting|monitor_diagnostic"),
         "message": "No logging or monitoring configured",
         "recommendation": (
-            "Add azurerm_monitor_diagnostic_setting"
-            " for audit and metrics logging"
+            "Add azurerm_monitor_diagnostic_setting for audit and metrics logging"
         ),
     },
     {
@@ -93,13 +82,10 @@ _RULES: list[dict[str, str | Severity | str]] = [
 _BEST_PRACTICES: dict[str, list[str]] = {
     "azurerm_storage_account": [
         "Enable HTTPS-only traffic (enable_https_traffic_only = true)",
-        "Set minimum TLS version to 1.2"
-        ' (min_tls_version = "TLS1_2")',
+        'Set minimum TLS version to 1.2 (min_tls_version = "TLS1_2")',
         "Disable public blob access (allow_blob_public_access = false)",
-        "Configure network rules to restrict access"
-        " (network_rules block)",
-        "Enable soft delete for blobs and containers"
-        " (delete_retention_policy)",
+        "Configure network rules to restrict access (network_rules block)",
+        "Enable soft delete for blobs and containers (delete_retention_policy)",
         "Enable storage account encryption with customer-managed keys",
         "Add diagnostic settings for logging and monitoring",
         "Apply resource tags for governance and cost tracking",
@@ -108,8 +94,7 @@ _BEST_PRACTICES: dict[str, list[str]] = {
         "Enable purge protection (purge_protection_enabled = true)",
         "Enable soft delete (soft_delete_retention_days >= 7)",
         "Configure access policies with least-privilege principle",
-        "Restrict network access"
-        ' (network_acls block with default_action = "Deny")',
+        'Restrict network access (network_acls block with default_action = "Deny")',
         "Enable diagnostic logging for audit events",
         "Use RBAC authorization (enable_rbac_authorization = true)",
         "Rotate keys and secrets regularly via expiration policies",
@@ -187,10 +172,7 @@ def _check_rule(
             for rtype, rname, block in blocks:
                 block_start = full_content.index(block)
                 block_end = block_start + len(block)
-                if (
-                    match.start() >= block_start
-                    and match.end() <= block_end
-                ):
+                if match.start() >= block_start and match.end() <= block_end:
                     resource = f"{rtype}.{rname}"
                     break
             findings.append(
@@ -236,33 +218,16 @@ def scan_terraform(
         Severity.MEDIUM: 10,
         Severity.LOW: 5,
     }
-    total_penalty = sum(
-        penalty_map.get(f.severity, 5) for f in unique_findings
-    )
+    total_penalty = sum(penalty_map.get(f.severity, 5) for f in unique_findings)
     score = max(0, 100 - total_penalty)
 
     if not unique_findings:
-        summary = (
-            "No issues detected."
-            " Configuration follows best practices."
-        )
+        summary = "No issues detected. Configuration follows best practices."
     else:
-        critical = sum(
-            1 for f in unique_findings
-            if f.severity == Severity.CRITICAL
-        )
-        high = sum(
-            1 for f in unique_findings
-            if f.severity == Severity.HIGH
-        )
-        medium = sum(
-            1 for f in unique_findings
-            if f.severity == Severity.MEDIUM
-        )
-        low = sum(
-            1 for f in unique_findings
-            if f.severity == Severity.LOW
-        )
+        critical = sum(1 for f in unique_findings if f.severity == Severity.CRITICAL)
+        high = sum(1 for f in unique_findings if f.severity == Severity.HIGH)
+        medium = sum(1 for f in unique_findings if f.severity == Severity.MEDIUM)
+        low = sum(1 for f in unique_findings if f.severity == Severity.LOW)
         parts = []
         if critical:
             parts.append(f"{critical} critical")
@@ -273,10 +238,7 @@ def scan_terraform(
         if low:
             parts.append(f"{low} low")
         count = len(unique_findings)
-        summary = (
-            f"Found {count} issue(s):"
-            f" {', '.join(parts)}."
-        )
+        summary = f"Found {count} issue(s): {', '.join(parts)}."
 
     analysis = InfraAnalysis(
         findings=unique_findings,
@@ -303,10 +265,7 @@ def check_security_best_practices(
     resource_type: Annotated[
         str,
         Field(
-            description=(
-                "Azure Terraform resource type"
-                " (e.g. azurerm_storage_account)"
-            )
+            description=("Azure Terraform resource type (e.g. azurerm_storage_account)")
         ),
     ],
 ) -> str:
@@ -331,8 +290,7 @@ def apply_fix(
         str,
         Field(
             description=(
-                "Terraform resource identifier"
-                " (e.g. azurerm_storage_account.main)"
+                "Terraform resource identifier (e.g. azurerm_storage_account.main)"
             )
         ),
     ],

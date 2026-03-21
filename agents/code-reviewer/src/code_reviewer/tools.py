@@ -54,9 +54,7 @@ def _find_unused_imports(code: str) -> list[str]:
         name = match.group(1) or match.group(2)
         rest = code[match.end() :]
         if not re.search(rf"\b{re.escape(name)}\b", rest):
-            findings.append(
-                f"[INFO] Import '{name}' appears unused."
-            )
+            findings.append(f"[INFO] Import '{name}' appears unused.")
     return findings
 
 
@@ -93,8 +91,7 @@ def analyze_code_quality(
     """
     if language.lower() != "python":
         return (
-            f"Language '{language}' is not yet supported."
-            " Currently supports: python."
+            f"Language '{language}' is not yet supported. Currently supports: python."
         )
 
     findings: list[str] = []
@@ -132,9 +129,7 @@ _HARDCODED_CREDS = re.compile(
     r"""(?:password|secret|api_key|apikey|token)\s*=\s*["'][^"']+["']""",
     re.IGNORECASE,
 )
-_UNSAFE_DESER = re.compile(
-    r"\b(?:pickle\.loads?|eval|exec)\s*\(", re.MULTILINE
-)
+_UNSAFE_DESER = re.compile(r"\b(?:pickle\.loads?|eval|exec)\s*\(", re.MULTILINE)
 
 
 @tool
@@ -151,8 +146,7 @@ def check_security_patterns(
     """
     if language.lower() != "python":
         return (
-            f"Language '{language}' is not yet supported."
-            " Currently supports: python."
+            f"Language '{language}' is not yet supported. Currently supports: python."
         )
 
     findings: list[str] = []
@@ -186,9 +180,7 @@ def check_security_patterns(
 
 # --- Improvement Suggestions ---
 
-_FOR_APPEND = re.compile(
-    r"for\s+(\w+)\s+in\s+.+:\s*\n\s+\w+\.append\(", re.MULTILINE
-)
+_FOR_APPEND = re.compile(r"for\s+(\w+)\s+in\s+.+:\s*\n\s+\w+\.append\(", re.MULTILINE)
 _TRY_FINALLY_CLOSE = re.compile(
     r"try\s*:.*?finally\s*:\s*\n\s+\w+\.close\(\)", re.DOTALL
 )
@@ -210,8 +202,7 @@ def suggest_improvements(
     """
     if language.lower() != "python":
         return (
-            f"Language '{language}' is not yet supported."
-            " Currently supports: python."
+            f"Language '{language}' is not yet supported. Currently supports: python."
         )
 
     suggestions: list[str] = []

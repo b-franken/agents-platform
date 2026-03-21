@@ -38,8 +38,7 @@ TOOL_CASES = [
     ("data-analyst-agent", "How many employees are in engineering?", "run_sql"),
     (
         "knowledge-agent",
-        "Search for information about remote work"
-        " in the handbook",
+        "Search for information about remote work in the handbook",
         "search_documents",
     ),
     (
@@ -59,8 +58,7 @@ TOOL_CASES = [
     ),
     (
         "infra-analyzer-agent",
-        'Scan this: resource "azurerm_storage_account"'
-        ' "s" {}',
+        'Scan this: resource "azurerm_storage_account" "s" {}',
         "scan_terraform",
     ),
 ]

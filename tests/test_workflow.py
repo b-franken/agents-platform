@@ -32,7 +32,9 @@ class TestWorkflowBuilding:
     @patch("agent_core.registry.HandoffBuilder")
     @patch("agent_core.factory.create_agent_from_config")
     def test_builds_with_all_agents(
-        self, mock_create, mock_hb_cls,
+        self,
+        mock_create,
+        mock_hb_cls,
     ) -> None:
         mock_create.return_value = (MagicMock(), MagicMock())
         mock_builder = _mock_handoff_builder()
@@ -52,7 +54,9 @@ class TestWorkflowBuilding:
     @patch("agent_core.registry.HandoffBuilder")
     @patch("agent_core.factory.create_agent_from_config")
     def test_autonomous_mode_disabled(
-        self, mock_create, mock_hb_cls,
+        self,
+        mock_create,
+        mock_hb_cls,
     ) -> None:
         mock_create.return_value = (MagicMock(), MagicMock())
         mock_builder = _mock_handoff_builder()
@@ -70,7 +74,9 @@ class TestWorkflowBuilding:
     @patch("agent_core.registry.HandoffBuilder")
     @patch("agent_core.factory.create_agent_from_config")
     def test_checkpoint_storage_passed(
-        self, mock_create, mock_hb_cls,
+        self,
+        mock_create,
+        mock_hb_cls,
     ) -> None:
         mock_create.return_value = (MagicMock(), MagicMock())
         mock_builder = _mock_handoff_builder()

@@ -19,10 +19,7 @@ class IncidentClassification(BaseModel):
 
     severity: Severity = Field(description="Incident severity level")
     impact_area: str = Field(
-        description=(
-            "Area of impact"
-            " (e.g., infrastructure, application, security)"
-        )
+        description=("Area of impact (e.g., infrastructure, application, security)")
     )
     affected_systems: list[str] = Field(
         description="List of affected systems or services"
@@ -30,8 +27,5 @@ class IncidentClassification(BaseModel):
     responsible_team: str = Field(description="Team responsible for resolution")
     suggested_runbook: str = Field(description="Name of the recommended runbook")
     estimated_resolution_time: str = Field(
-        description=(
-            "Estimated time to resolve"
-            " (e.g., '30 minutes', '2 hours')"
-        )
+        description=("Estimated time to resolve (e.g., '30 minutes', '2 hours')")
     )

@@ -22,8 +22,7 @@ ROUTING_CASES = [
     ("The database is down and users cannot log in", "incident-triage-agent"),
     ("Review this Python code for security issues", "code-reviewer-agent"),
     (
-        "Scan our Terraform configuration"
-        " for best practice violations",
+        "Scan our Terraform configuration for best practice violations",
         "infra-analyzer-agent",
     ),
 ]
