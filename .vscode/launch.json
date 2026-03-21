@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Platform",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "router.main",
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/packages/agent-core/src:${workspaceFolder}/agents/router/src" },
+      "justMyCode": true
+    }
+  ]
+}

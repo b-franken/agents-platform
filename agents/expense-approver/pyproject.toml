@@ -1,0 +1,16 @@
+[project]
+name = "expense-approver-agent"
+version = "0.1.0"
+description = "Expense submission with human approval — demonstrates approval_mode"
+requires-python = ">=3.13"
+dependencies = ["agent-core"]
+
+[tool.uv.sources]
+agent-core = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/expense_approver"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

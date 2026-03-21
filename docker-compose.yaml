@@ -1,0 +1,12 @@
+services:
+  platform:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file: .env
+
+  aspire:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    ports:
+      - "18888:18888"
+      - "4317:18889"

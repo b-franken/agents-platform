@@ -1,0 +1,7 @@
+id: KB-004
+title: Microsoft Teams not loading
+keywords: teams loading crash slow video call
+solution: |
+  1. Clear Teams cache: delete %AppData%\Microsoft\Teams (Windows) or ~/Library/Application Support/Microsoft/Teams (macOS).
+  2. Restart Teams.
+  3. If video freezes, disable GPU hardware acceleration in Settings > General.

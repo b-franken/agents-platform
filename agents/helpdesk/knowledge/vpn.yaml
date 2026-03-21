@@ -1,0 +1,8 @@
+id: KB-001
+title: VPN connection fails
+keywords: vpn connect timeout network remote
+solution: |
+  1. Restart Cisco AnyConnect client.
+  2. Check internet connection.
+  3. Try an alternative VPN server if available.
+  4. Clear DNS cache: ipconfig /flushdns (Windows) or sudo dscacheutil -flushcache (macOS).

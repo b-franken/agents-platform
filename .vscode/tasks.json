@@ -1,0 +1,49 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Platform",
+      "type": "shell",
+      "command": "uv run --package router-agent python -m router.main",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "Run Tests",
+      "type": "shell",
+      "command": "uv run pytest tests/ -v --no-header",
+      "group": "test"
+    },
+    {
+      "label": "Scaffold Agent",
+      "type": "shell",
+      "command": "uv run python -m agent_core.scaffold ${input:agentName} --description '${input:agentDesc}'",
+      "group": "none"
+    },
+    {
+      "label": "Open DevUI",
+      "type": "shell",
+      "command": "uv run devui --port 8080",
+      "group": "none",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "Validate Agents",
+      "type": "shell",
+      "command": "uv run python -m agent_core.validate",
+      "group": "none"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "agentName",
+      "type": "promptString",
+      "description": "Agent name (kebab-case, e.g. my-agent)"
+    },
+    {
+      "id": "agentDesc",
+      "type": "promptString",
+      "description": "Short description of what the agent does"
+    }
+  ]
+}

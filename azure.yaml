@@ -1,0 +1,33 @@
+name: agent-platform
+metadata:
+  template: agent-platform@0.1.0
+infra:
+  provider: terraform
+  path: infra
+services:
+  platform:
+    host: containerapp
+    project: .
+    language: python
+    docker:
+      path: Dockerfile
+hooks:
+  preprovision:
+    shell: sh
+    run: uv run python scripts/preflight.py
+  postprovision:
+    shell: sh
+    run: |
+      echo ""
+      echo "========================================"
+      echo "  Deployment complete!"
+      echo "========================================"
+      echo ""
+      echo "  Endpoint:  ${SERVICE_PLATFORM_URI}"
+      echo ""
+      echo "  Next steps:"
+      echo "    1. Copy infra outputs to .env:"
+      echo "       cd infra && terraform output"
+      echo "    2. Run the platform:"
+      echo "       uv run --package router-agent python -m router.main"
+      echo ""

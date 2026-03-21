@@ -1,0 +1,16 @@
+[project]
+name = "helpdesk-agent"
+version = "0.1.0"
+description = "IT helpdesk agent — troubleshoots problems, checks systems, creates tickets"
+requires-python = ">=3.13"
+dependencies = ["agent-core"]
+
+[tool.uv.sources]
+agent-core = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/helpdesk"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

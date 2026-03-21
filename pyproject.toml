@@ -1,0 +1,80 @@
+[project]
+name = "agents-platform"
+version = "0.1.0"
+description = "A plug-and-play multi-agent platform on Azure AI Foundry"
+requires-python = ">=3.13"
+dependencies = [
+    "agent-core",
+    "helpdesk-agent",
+    "knowledge-agent",
+    "data-analyst-agent",
+    "expense-approver-agent",
+    "router-agent",
+    "incident-triage-agent",
+    "code-reviewer-agent",
+    "infra-analyzer-agent",
+]
+
+[tool.uv.sources]
+agent-core = { workspace = true }
+helpdesk-agent = { workspace = true }
+knowledge-agent = { workspace = true }
+data-analyst-agent = { workspace = true }
+expense-approver-agent = { workspace = true }
+router-agent = { workspace = true }
+incident-triage-agent = { workspace = true }
+code-reviewer-agent = { workspace = true }
+infra-analyzer-agent = { workspace = true }
+
+[tool.uv.workspace]
+members = ["packages/*", "agents/*"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.9.0",
+    "mypy>=1.19.0",
+    "types-pyyaml>=6.0.0",
+    "agent-framework-devui>=1.0.0b260319",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "I",
+    "N",
+    "UP",
+    "B",
+    "S",
+    "SIM",
+    "TCH",
+    "RUF",
+    "PTH",
+    "PERF",
+    "LOG",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/sample_db.py" = ["E501"]
+"**/tests/**" = ["S101"]
+"**/evals/**" = ["S101"]
+"**/examples/**" = ["S101", "S104", "S113"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = "--import-mode=importlib"
+markers = [
+    "integration: requires Azure credentials",
+    "eval: agent quality evaluation tests (requires Azure credentials)",
+]

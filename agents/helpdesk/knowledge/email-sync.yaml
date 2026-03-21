@@ -1,0 +1,7 @@
+id: KB-005
+title: Email not syncing on mobile
+keywords: email outlook sync mobile phone android ios
+solution: |
+  1. Remove and re-add your account in Outlook mobile.
+  2. Ensure your MDM/Intune profile is installed and active.
+  3. Check that battery optimization is disabled for Outlook.

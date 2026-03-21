@@ -1,0 +1,8 @@
+id: KB-006
+title: WiFi connection issues in office
+keywords: wifi wireless slow disconnect office
+solution: |
+  1. Connect to the 5GHz network if available (usually faster and less congested).
+  2. Forget the network and reconnect.
+  3. Move closer to the access point or try a different location.
+  4. If persistent, report the location to IT for access point review.

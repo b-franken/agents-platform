@@ -1,0 +1,8 @@
+id: KB-007
+title: Multi-factor authentication setup
+keywords: mfa 2fa authenticator setup register phone
+solution: |
+  1. Install Microsoft Authenticator on your phone.
+  2. Go to https://aka.ms/mfasetup.
+  3. Choose 'Authenticator app' and scan the QR code.
+  4. Set up a backup phone number as recovery option.

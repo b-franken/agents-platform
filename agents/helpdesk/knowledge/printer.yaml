@@ -1,0 +1,8 @@
+id: KB-003
+title: Printer not found
+keywords: printer print not found offline queue
+solution: |
+  1. Open Settings > Printers & Scanners > Add printer.
+  2. Search for your network printer by name or IP address.
+  3. If not found, restart the Print Spooler service (Windows) or CUPS (macOS/Linux).
+  4. Check if the printer is on the same network as your computer.

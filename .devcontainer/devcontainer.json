@@ -1,0 +1,29 @@
+{
+  "name": "Agent Platform",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13",
+  "features": {
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/azure/azure-dev/azd:0": {}
+  },
+  "postCreateCommand": "pip install uv && uv sync && test -f .env || cp .env.example .env",
+  "postStartCommand": "echo '\n  Agent Platform ready!\n  1. Edit .env with your Azure AI Foundry credentials\n  2. Run: make run\n'",
+  "forwardPorts": [8080, 9000],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "hashicorp.terraform",
+        "github.copilot"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": ".venv/bin/python",
+        "editor.formatOnSave": true,
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        }
+      }
+    }
+  }
+}

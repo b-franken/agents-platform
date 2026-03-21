@@ -1,0 +1,16 @@
+[project]
+name = "incident-triage-agent"
+version = "0.1.0"
+description = "Incident triage — classifies severity, suggests runbooks, tracks incident history"
+requires-python = ">=3.13"
+dependencies = ["agent-core"]
+
+[tool.uv.sources]
+agent-core = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/incident_triage"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,5 @@
+azure-functions
+azure-identity>=1.15.0
+agent-framework-azurefunctions>=1.0.0rc1 --pre
+agent-framework-azure-ai>=1.0.0rc5 --pre
+python-dotenv>=1.0.0
