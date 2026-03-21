@@ -14,7 +14,9 @@ _BARE_EXCEPT = re.compile(r"^\s*except\s*:", re.MULTILINE)
 _MUTABLE_DEFAULT = re.compile(
     r"def\s+\w+\s*\([^)]*(?::\s*\w+\s*)?=\s*(\[\]|\{\}|\bset\(\))", re.MULTILINE
 )
-_UNUSED_IMPORT = re.compile(r"^import\s+(\w+)|^from\s+\w+\s+import\s+(\w+)", re.MULTILINE)
+_UNUSED_IMPORT = re.compile(
+    r"^import\s+(\w+)|^from\s+\w+\s+import\s+(\w+)", re.MULTILINE
+)
 _MISSING_TYPE_HINT = re.compile(r"def\s+\w+\s*\(([^)]*)\)\s*:", re.MULTILINE)
 _FUNCTION_DEF = re.compile(r"^([ \t]*)def\s+\w+", re.MULTILINE)
 
@@ -85,9 +87,15 @@ def analyze_code_quality(
         str, Field(description="Programming language (e.g. python)")
     ] = "python",
 ) -> str:
-    """Analyze code for common quality issues like unused imports, bare excepts, and mutable defaults."""
+    """Analyze code for common quality issues.
+
+    Detects unused imports, bare excepts, and mutable defaults.
+    """
     if language.lower() != "python":
-        return f"Language '{language}' is not yet supported. Currently supports: python."
+        return (
+            f"Language '{language}' is not yet supported."
+            " Currently supports: python."
+        )
 
     findings: list[str] = []
 
@@ -136,9 +144,16 @@ def check_security_patterns(
         str, Field(description="Programming language (e.g. python)")
     ] = "python",
 ) -> str:
-    """Scan code for security anti-patterns like SQL injection, hardcoded credentials, and unsafe deserialization."""
+    """Scan code for security anti-patterns.
+
+    Detects SQL injection, hardcoded credentials, and unsafe
+    deserialization.
+    """
     if language.lower() != "python":
-        return f"Language '{language}' is not yet supported. Currently supports: python."
+        return (
+            f"Language '{language}' is not yet supported."
+            " Currently supports: python."
+        )
 
     findings: list[str] = []
 
@@ -189,9 +204,15 @@ def suggest_improvements(
         str, Field(description="Programming language (e.g. python)")
     ] = "python",
 ) -> str:
-    """Suggest code improvements like list comprehensions, context managers, and f-strings."""
+    """Suggest code improvements.
+
+    Covers list comprehensions, context managers, and f-strings.
+    """
     if language.lower() != "python":
-        return f"Language '{language}' is not yet supported. Currently supports: python."
+        return (
+            f"Language '{language}' is not yet supported."
+            " Currently supports: python."
+        )
 
     suggestions: list[str] = []
 

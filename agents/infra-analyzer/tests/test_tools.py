@@ -1,7 +1,10 @@
 """Tests for infra-analyzer agent tools."""
 
-from infra_analyzer.tools import apply_fix, check_security_best_practices, scan_terraform
-
+from infra_analyzer.tools import (
+    apply_fix,
+    check_security_best_practices,
+    scan_terraform,
+)
 
 _STORAGE_NO_ENCRYPTION = """
 resource "azurerm_storage_account" "example" {

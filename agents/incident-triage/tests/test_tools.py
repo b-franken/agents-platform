@@ -31,7 +31,9 @@ class TestClassifyIncident:
         assert "INC-" in result
 
     def test_classify_incident_security(self):
-        result = classify_incident("Unauthorized access detected, possible security breach")
+        result = classify_incident(
+            "Unauthorized access detected, possible security breach"
+        )
         assert "P1" in result
         assert "security" in result
         assert "Security Operations" in result

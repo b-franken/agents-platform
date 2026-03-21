@@ -86,13 +86,16 @@ def create_client(model: str | None = None) -> AzureOpenAIResponsesClient:
         )
 
     if endpoint and credential:
-        endpoint_key = (
-            "project_endpoint" if "/api/projects/" in endpoint else "endpoint"
-        )
+        if "/api/projects/" in endpoint:
+            return AzureOpenAIResponsesClient(
+                deployment_name=deployment_name,
+                credential=credential,
+                project_endpoint=endpoint,
+            )
         return AzureOpenAIResponsesClient(
             deployment_name=deployment_name,
             credential=credential,
-            **{endpoint_key: endpoint},
+            endpoint=endpoint,
         )
 
     if credential:

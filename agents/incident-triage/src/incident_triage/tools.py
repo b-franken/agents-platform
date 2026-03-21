@@ -12,17 +12,35 @@ from pydantic import Field
 # --- Keyword mappings for deterministic classification ---
 
 _SEVERITY_KEYWORDS: dict[str, list[str]] = {
-    "P1": ["outage", "down", "unavailable", "critical", "breach", "data loss", "production down"],
-    "P2": ["degraded", "slow", "intermittent", "partial", "high latency", "errors spiking"],
+    "P1": [
+        "outage", "down", "unavailable", "critical",
+        "breach", "data loss", "production down",
+    ],
+    "P2": [
+        "degraded", "slow", "intermittent", "partial",
+        "high latency", "errors spiking",
+    ],
     "P3": ["minor", "cosmetic", "workaround", "low impact", "single user"],
     "P4": ["question", "request", "enhancement", "documentation", "informational"],
 }
 
 _IMPACT_KEYWORDS: dict[str, list[str]] = {
-    "infrastructure": ["database", "server", "network", "dns", "load balancer", "disk", "cpu", "memory"],
-    "application": ["api", "deployment", "service", "endpoint", "timeout", "error rate", "500"],
-    "security": ["breach", "unauthorized", "vulnerability", "exploit", "credentials", "leaked"],
-    "networking": ["network", "dns", "connectivity", "latency", "packet loss", "firewall"],
+    "infrastructure": [
+        "database", "server", "network", "dns",
+        "load balancer", "disk", "cpu", "memory",
+    ],
+    "application": [
+        "api", "deployment", "service", "endpoint",
+        "timeout", "error rate", "500",
+    ],
+    "security": [
+        "breach", "unauthorized", "vulnerability",
+        "exploit", "credentials", "leaked",
+    ],
+    "networking": [
+        "network", "dns", "connectivity", "latency",
+        "packet loss", "firewall",
+    ],
 }
 
 _TEAM_MAPPING: dict[str, str] = {
@@ -125,7 +143,12 @@ def classify_incident(
     team = _TEAM_MAPPING.get(impact_area, "Platform Engineering")
     runbook = _RUNBOOK_MAPPING.get(impact_area, "api_degradation")
 
-    resolution_times = {"P1": "1 hour", "P2": "4 hours", "P3": "24 hours", "P4": "72 hours"}
+    resolution_times = {
+        "P1": "1 hour",
+        "P2": "4 hours",
+        "P3": "24 hours",
+        "P4": "72 hours",
+    }
     est_time = resolution_times[severity]
 
     incident_id = f"INC-{uuid.uuid4().hex[:8].upper()}"
@@ -185,12 +208,17 @@ def list_recent_incidents(
     now = datetime.now(tz=UTC)
     lines: list[str] = []
     for incident in reversed(_incident_history):
-        created = datetime.strptime(incident["created_at"], "%Y-%m-%d %H:%M UTC").replace(tzinfo=UTC)
+        created = datetime.strptime(
+            incident["created_at"], "%Y-%m-%d %H:%M UTC"
+        ).replace(tzinfo=UTC)
         age_hours = (now - created).total_seconds() / 3600
         if age_hours <= hours:
             lines.append(
-                f"[{incident['id']}] {incident['severity']} — {incident['impact_area']} — "
-                f"{incident['description'][:80]} ({incident['created_at']})"
+                f"[{incident['id']}] "
+                f"{incident['severity']} — "
+                f"{incident['impact_area']} — "
+                f"{incident['description'][:80]} "
+                f"({incident['created_at']})"
             )
 
     if not lines:

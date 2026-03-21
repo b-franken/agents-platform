@@ -16,18 +16,38 @@ _RULES: list[dict[str, str | Severity | str]] = [
     {
         "id": "NO_ENCRYPTION",
         "severity": Severity.HIGH,
-        "pattern": r'resource\s+"azurerm_storage_account"[^}]*?(?!enable_https_traffic_only\s*=\s*true)',
-        "search": r'resource\s+"azurerm_storage_account"\s+"(\w+)"',
-        "negative_pattern": r"encryption|enable_https_traffic_only\s*=\s*true|min_tls_version",
-        "message": "Storage account missing encryption configuration",
-        "recommendation": "Add enable_https_traffic_only = true and min_tls_version = \"TLS1_2\"",
+        "pattern": (
+            r'resource\s+"azurerm_storage_account"[^}]*?'
+            r"(?!enable_https_traffic_only\s*=\s*true)"
+        ),
+        "search": (
+            r'resource\s+"azurerm_storage_account"\s+"(\w+)"'
+        ),
+        "negative_pattern": (
+            r"encryption"
+            r"|enable_https_traffic_only\s*=\s*true"
+            r"|min_tls_version"
+        ),
+        "message": (
+            "Storage account missing encryption configuration"
+        ),
+        "recommendation": (
+            "Add enable_https_traffic_only = true"
+            ' and min_tls_version = "TLS1_2"'
+        ),
     },
     {
         "id": "PUBLIC_ACCESS",
         "severity": Severity.CRITICAL,
-        "pattern": r'public_network_access_enabled\s*=\s*true|allow_blob_public_access\s*=\s*true',
+        "pattern": (
+            r"public_network_access_enabled\s*=\s*true"
+            r"|allow_blob_public_access\s*=\s*true"
+        ),
         "message": "Public network access is enabled",
-        "recommendation": "Set public_network_access_enabled = false and restrict access via network rules",
+        "recommendation": (
+            "Set public_network_access_enabled = false"
+            " and restrict access via network rules"
+        ),
     },
     {
         "id": "NO_TAGS",
@@ -35,32 +55,51 @@ _RULES: list[dict[str, str | Severity | str]] = [
         "pattern": r'resource\s+"azurerm_\w+"\s+"(\w+)"\s*\{',
         "negative_pattern": r"tags\s*=\s*\{",
         "message": "Resource missing tags",
-        "recommendation": "Add tags block with at least environment, owner, and cost-center tags",
+        "recommendation": (
+            "Add tags block with at least environment,"
+            " owner, and cost-center tags"
+        ),
     },
     {
         "id": "NO_LOGGING",
         "severity": Severity.MEDIUM,
-        "pattern": r'resource\s+"azurerm_storage_account"\s+"(\w+)"',
-        "negative_pattern": r"logging|diagnostic_setting|monitor_diagnostic",
+        "pattern": (
+            r'resource\s+"azurerm_storage_account"\s+"(\w+)"'
+        ),
+        "negative_pattern": (
+            r"logging|diagnostic_setting|monitor_diagnostic"
+        ),
         "message": "No logging or monitoring configured",
-        "recommendation": "Add azurerm_monitor_diagnostic_setting for audit and metrics logging",
+        "recommendation": (
+            "Add azurerm_monitor_diagnostic_setting"
+            " for audit and metrics logging"
+        ),
     },
     {
         "id": "HARDCODED_CREDENTIALS",
         "severity": Severity.CRITICAL,
-        "pattern": r'(?:password|secret|api_key|access_key|connection_string)\s*=\s*"[^"]{8,}"',
+        "pattern": (
+            r"(?:password|secret|api_key|access_key"
+            r'|connection_string)\s*=\s*"[^"]{8,}"'
+        ),
         "message": "Hardcoded credentials detected",
-        "recommendation": "Use azurerm_key_vault_secret or variable references instead of hardcoded values",
+        "recommendation": (
+            "Use azurerm_key_vault_secret or variable"
+            " references instead of hardcoded values"
+        ),
     },
 ]
 
 _BEST_PRACTICES: dict[str, list[str]] = {
     "azurerm_storage_account": [
         "Enable HTTPS-only traffic (enable_https_traffic_only = true)",
-        "Set minimum TLS version to 1.2 (min_tls_version = \"TLS1_2\")",
+        "Set minimum TLS version to 1.2"
+        ' (min_tls_version = "TLS1_2")',
         "Disable public blob access (allow_blob_public_access = false)",
-        "Configure network rules to restrict access (network_rules block)",
-        "Enable soft delete for blobs and containers (delete_retention_policy)",
+        "Configure network rules to restrict access"
+        " (network_rules block)",
+        "Enable soft delete for blobs and containers"
+        " (delete_retention_policy)",
         "Enable storage account encryption with customer-managed keys",
         "Add diagnostic settings for logging and monitoring",
         "Apply resource tags for governance and cost tracking",
@@ -69,14 +108,16 @@ _BEST_PRACTICES: dict[str, list[str]] = {
         "Enable purge protection (purge_protection_enabled = true)",
         "Enable soft delete (soft_delete_retention_days >= 7)",
         "Configure access policies with least-privilege principle",
-        "Restrict network access (network_acls block with default_action = \"Deny\")",
+        "Restrict network access"
+        ' (network_acls block with default_action = "Deny")',
         "Enable diagnostic logging for audit events",
         "Use RBAC authorization (enable_rbac_authorization = true)",
         "Rotate keys and secrets regularly via expiration policies",
         "Apply resource tags for governance and cost tracking",
     ],
     "azurerm_container_app": [
-        "Use managed identity for authentication (identity block with type = \"SystemAssigned\")",
+        "Use managed identity for authentication"
+        ' (identity block with type = "SystemAssigned")',
         "Configure ingress rules to restrict external access",
         "Store sensitive values as secrets, never inline",
         "Set resource limits (cpu and memory) for each container",
@@ -118,7 +159,11 @@ def _check_rule(
 ) -> list[Finding]:
     findings: list[Finding] = []
     rule_id = str(rule["id"])
-    severity = rule["severity"] if isinstance(rule["severity"], Severity) else Severity(str(rule["severity"]))
+    severity = (
+        rule["severity"]
+        if isinstance(rule["severity"], Severity)
+        else Severity(str(rule["severity"]))
+    )
     message = str(rule["message"])
     recommendation = str(rule["recommendation"])
 
@@ -140,7 +185,12 @@ def _check_rule(
         for match in re.finditer(str(rule["pattern"]), full_content):
             resource = "unknown"
             for rtype, rname, block in blocks:
-                if match.start() >= full_content.index(block) and match.end() <= full_content.index(block) + len(block):
+                block_start = full_content.index(block)
+                block_end = block_start + len(block)
+                if (
+                    match.start() >= block_start
+                    and match.end() <= block_end
+                ):
                     resource = f"{rtype}.{rname}"
                     break
             findings.append(
@@ -186,16 +236,33 @@ def scan_terraform(
         Severity.MEDIUM: 10,
         Severity.LOW: 5,
     }
-    total_penalty = sum(penalty_map.get(f.severity, 5) for f in unique_findings)
+    total_penalty = sum(
+        penalty_map.get(f.severity, 5) for f in unique_findings
+    )
     score = max(0, 100 - total_penalty)
 
     if not unique_findings:
-        summary = "No issues detected. Configuration follows best practices."
+        summary = (
+            "No issues detected."
+            " Configuration follows best practices."
+        )
     else:
-        critical = sum(1 for f in unique_findings if f.severity == Severity.CRITICAL)
-        high = sum(1 for f in unique_findings if f.severity == Severity.HIGH)
-        medium = sum(1 for f in unique_findings if f.severity == Severity.MEDIUM)
-        low = sum(1 for f in unique_findings if f.severity == Severity.LOW)
+        critical = sum(
+            1 for f in unique_findings
+            if f.severity == Severity.CRITICAL
+        )
+        high = sum(
+            1 for f in unique_findings
+            if f.severity == Severity.HIGH
+        )
+        medium = sum(
+            1 for f in unique_findings
+            if f.severity == Severity.MEDIUM
+        )
+        low = sum(
+            1 for f in unique_findings
+            if f.severity == Severity.LOW
+        )
         parts = []
         if critical:
             parts.append(f"{critical} critical")
@@ -205,7 +272,11 @@ def scan_terraform(
             parts.append(f"{medium} medium")
         if low:
             parts.append(f"{low} low")
-        summary = f"Found {len(unique_findings)} issue(s): {', '.join(parts)}."
+        count = len(unique_findings)
+        summary = (
+            f"Found {count} issue(s):"
+            f" {', '.join(parts)}."
+        )
 
     analysis = InfraAnalysis(
         findings=unique_findings,
@@ -213,13 +284,17 @@ def scan_terraform(
         score=score,
     )
 
-    lines = [f"Score: {analysis.score}/100", f"Summary: {analysis.summary}", ""]
-    for f in analysis.findings:
-        lines.append(
-            f"[{f.severity.value}] {f.rule_id}: {f.message}\n"
-            f"  Resource: {f.resource}\n"
-            f"  Fix: {f.recommendation}"
-        )
+    lines = [
+        f"Score: {analysis.score}/100",
+        f"Summary: {analysis.summary}",
+        "",
+    ]
+    lines.extend(
+        f"[{f.severity.value}] {f.rule_id}: {f.message}\n"
+        f"  Resource: {f.resource}\n"
+        f"  Fix: {f.recommendation}"
+        for f in analysis.findings
+    )
     return "\n".join(lines) if lines else "No issues found."
 
 
@@ -227,10 +302,15 @@ def scan_terraform(
 def check_security_best_practices(
     resource_type: Annotated[
         str,
-        Field(description="Azure Terraform resource type (e.g. azurerm_storage_account)"),
+        Field(
+            description=(
+                "Azure Terraform resource type"
+                " (e.g. azurerm_storage_account)"
+            )
+        ),
     ],
 ) -> str:
-    """Return security best practices checklist for an Azure resource type."""
+    """Return security best practices for an Azure resource type."""
     practices = _BEST_PRACTICES.get(resource_type)
     if not practices:
         supported = ", ".join(sorted(_BEST_PRACTICES.keys()))
@@ -249,14 +329,22 @@ def check_security_best_practices(
 def apply_fix(
     resource: Annotated[
         str,
-        Field(description="Terraform resource identifier (e.g. azurerm_storage_account.main)"),
+        Field(
+            description=(
+                "Terraform resource identifier"
+                " (e.g. azurerm_storage_account.main)"
+            )
+        ),
     ],
     fix_description: Annotated[
         str,
         Field(description="Description of the fix to apply"),
     ],
 ) -> str:
-    """Apply a suggested fix to a Terraform resource. Requires human approval."""
+    """Apply a suggested fix to a Terraform resource.
+
+    Requires human approval.
+    """
     return (
         f"Fix applied successfully.\n"
         f"Resource: {resource}\n"

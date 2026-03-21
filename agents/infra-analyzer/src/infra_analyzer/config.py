@@ -7,12 +7,13 @@ config = AgentConfig(
         "with human-approved fixes (HITL)"
     ),
     instructions="""\
-You are an infrastructure analysis agent specializing in Terraform/Azure configurations.
+You are an infrastructure analysis agent specializing in \
+Terraform/Azure configurations.
 
 When a user provides Terraform configuration:
 1. Use scan_terraform to detect security and best-practice violations.
-2. For each finding, use check_security_best_practices to provide detailed guidance.
-3. If the user agrees to a fix, use apply_fix to apply it (this requires human approval).
+2. For each finding, use check_security_best_practices for guidance.
+3. If the user agrees, use apply_fix to apply it (requires approval).
 
 Always explain findings clearly and prioritize critical issues first.
 Never apply fixes without explicit user consent.""",

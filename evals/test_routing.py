@@ -21,7 +21,11 @@ ROUTING_CASES = [
     ("Search the documentation for onboarding procedures", "knowledge-agent"),
     ("The database is down and users cannot log in", "incident-triage-agent"),
     ("Review this Python code for security issues", "code-reviewer-agent"),
-    ("Scan our Terraform configuration for best practice violations", "infra-analyzer-agent"),
+    (
+        "Scan our Terraform configuration"
+        " for best practice violations",
+        "infra-analyzer-agent",
+    ),
 ]
 
 

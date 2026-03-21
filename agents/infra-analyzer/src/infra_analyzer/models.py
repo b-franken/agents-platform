@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     CRITICAL = "CRITICAL"
     HIGH = "HIGH"
     MEDIUM = "MEDIUM"
@@ -15,9 +15,15 @@ class Severity(str, Enum):
 
 
 class Finding(BaseModel):
-    rule_id: str = Field(description="Unique identifier for the rule that was violated")
+    rule_id: str = Field(
+        description="Unique identifier for the rule that was violated"
+    )
     severity: Severity = Field(description="Severity level of the finding")
-    resource: str = Field(description="The Terraform resource where the issue was found")
+    resource: str = Field(
+        description=(
+            "The Terraform resource where the issue was found"
+        )
+    )
     message: str = Field(description="Human-readable description of the issue")
     recommendation: str = Field(description="Suggested fix for the issue")
 

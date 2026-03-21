@@ -6,10 +6,13 @@ Run with: uv run pytest evals/ -m eval
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable
+from typing import TYPE_CHECKING
 
 import pytest
 from agent_framework import FunctionInvocationContext, FunctionMiddleware
+
+if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
 
 pytestmark = pytest.mark.eval
 
@@ -33,11 +36,33 @@ TOOL_CASES = [
     ("helpdesk-agent", "My VPN keeps disconnecting", "search_knowledge_base"),
     ("data-analyst-agent", "What tables are available?", "describe_tables"),
     ("data-analyst-agent", "How many employees are in engineering?", "run_sql"),
-    ("knowledge-agent", "Search for information about remote work in the handbook", "search_documents"),
-    ("incident-triage-agent", "The production database is completely down", "classify_incident"),
-    ("incident-triage-agent", "Show me the runbook for a network outage", "get_runbook"),
-    ("code-reviewer-agent", "Check this code: import os; eval(input())", "check_security_patterns"),
-    ("infra-analyzer-agent", 'Scan this: resource "azurerm_storage_account" "s" {}', "scan_terraform"),
+    (
+        "knowledge-agent",
+        "Search for information about remote work"
+        " in the handbook",
+        "search_documents",
+    ),
+    (
+        "incident-triage-agent",
+        "The production database is completely down",
+        "classify_incident",
+    ),
+    (
+        "incident-triage-agent",
+        "Show me the runbook for a network outage",
+        "get_runbook",
+    ),
+    (
+        "code-reviewer-agent",
+        "Check this code: import os; eval(input())",
+        "check_security_patterns",
+    ),
+    (
+        "infra-analyzer-agent",
+        'Scan this: resource "azurerm_storage_account"'
+        ' "s" {}',
+        "scan_terraform",
+    ),
 ]
 
 
