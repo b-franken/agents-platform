@@ -29,8 +29,17 @@ Set `max_output_tokens` to the minimum your agent needs:
 
 ## Infrastructure
 
-- **POC**: Use `poc.tfvars` — Basic ACR, no VNet (~10/month)
-- **Production**: Use `enterprise.tfvars` — only when you need private networking
+### Foundry hosted (default, recommended)
+
+With `deployment_mode = "foundry"` (default), Foundry manages the agent runtime. You pay only for model tokens — no Container Apps hosting cost.
+
+Backing resources (Cosmos DB, AI Search, Storage Account) are provisioned by the AVM module and have minimal cost at low usage. This is the most cost-effective option for most workloads.
+
+### Container Apps (self-hosted)
+
+With `deployment_mode = "container_apps"`:
+- **POC**: Public endpoints, Basic ACR (~$10/month)
+- **Enterprise**: Private endpoints, Premium ACR, VNet (~$92/month)
 
 ## Monitoring
 

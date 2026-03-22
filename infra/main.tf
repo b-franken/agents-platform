@@ -35,7 +35,7 @@ module "ai_foundry" {
   resource_group_resource_id = azurerm_resource_group.this.id
 
   ai_foundry = {
-    create_ai_agent_service = false
+    create_ai_agent_service = var.enable_agent_service
     name                    = module.naming.cognitive_account.name_unique
   }
 
@@ -71,12 +71,42 @@ module "ai_foundry" {
       name                       = local.project_name
       description                = "Main AI project"
       display_name               = "${var.project_name} Project"
-      create_project_connections = false
+      create_project_connections = var.enable_agent_service
+
+      # Connect BYOR resources to the project (required for Agent Service)
+      cosmos_db_connection = var.enable_agent_service ? {
+        new_resource_map_key = "this"
+      } : null
+      ai_search_connection = var.enable_agent_service ? {
+        new_resource_map_key = "this"
+      } : null
+      storage_account_connection = var.enable_agent_service ? {
+        new_resource_map_key = "this"
+      } : null
     }
   }
 
-  create_byor              = false
+  create_byor              = var.enable_agent_service
   create_private_endpoints = var.enable_private_networking
+
+  # BYOR resource definitions — created when enable_agent_service = true
+  cosmosdb_definition = var.enable_agent_service ? {
+    this = {
+      local_authentication_disabled = true
+    }
+  } : {}
+
+  ai_search_definition = var.enable_agent_service ? {
+    this = {}
+  } : {}
+
+  storage_account_definition = var.enable_agent_service ? {
+    this = {}
+  } : {}
+
+  key_vault_definition = var.enable_agent_service ? {
+    this = {}
+  } : {}
 
   private_endpoint_subnet_resource_id = (
     var.enable_private_networking
@@ -98,16 +128,18 @@ resource "azurerm_role_assignment" "deployer_ai_developer" {
 }
 
 resource "azurerm_role_assignment" "container_app_openai_user" {
+  count                = var.deployment_mode == "container_apps" ? 1 : 0
   scope                = module.ai_foundry.resource_id
   role_definition_name = "Cognitive Services OpenAI User"
-  principal_id         = module.container_app.identity[0].principal_id
+  principal_id         = module.container_app[0].identity[0].principal_id
   principal_type       = "ServicePrincipal"
 }
 
 resource "azurerm_role_assignment" "container_app_acr_pull" {
+  count                = var.deployment_mode == "container_apps" ? 1 : 0
   scope                = module.acr.resource_id
   role_definition_name = "AcrPull"
-  principal_id         = module.container_app.identity[0].principal_id
+  principal_id         = module.container_app[0].identity[0].principal_id
   principal_type       = "ServicePrincipal"
 }
 
@@ -132,9 +164,10 @@ module "acr" {
   tags = var.tags
 }
 
-# ─── Log Analytics (required by Container App Environment) ───
+# ─── Container Apps (only when deployment_mode = "container_apps") ───
 
 module "log_analytics" {
+  count   = var.deployment_mode == "container_apps" ? 1 : 0
   source  = "Azure/avm-res-operationalinsights-workspace/azurerm"
   version = "0.5.1"
 
@@ -148,9 +181,8 @@ module "log_analytics" {
   tags = var.tags
 }
 
-# ─── Container App Environment ───────────────────────────────
-
 module "container_env" {
+  count  = var.deployment_mode == "container_apps" ? 1 : 0
   source = "Azure/avm-res-app-managedenvironment/azurerm"
 
   name                = module.naming.container_app_environment.name_unique
@@ -158,7 +190,7 @@ module "container_env" {
   location            = azurerm_resource_group.this.location
 
   log_analytics_workspace = {
-    resource_id = module.log_analytics.resource_id
+    resource_id = module.log_analytics[0].resource_id
   }
 
   infrastructure_subnet_id = (
@@ -170,16 +202,15 @@ module "container_env" {
   zone_redundancy_enabled = var.enable_private_networking
 }
 
-# ─── Container App ───────────────────────────────────────────
-
 module "container_app" {
+  count  = var.deployment_mode == "container_apps" ? 1 : 0
   source = "Azure/avm-res-app-containerapp/azurerm"
 
   name                                  = "agent-platform"
   resource_group_name                   = azurerm_resource_group.this.name
   resource_group_id                     = azurerm_resource_group.this.id
   location                              = azurerm_resource_group.this.location
-  container_app_environment_resource_id = module.container_env.resource_id
+  container_app_environment_resource_id = module.container_env[0].resource_id
   revision_mode = "Single"
 
   managed_identities = {

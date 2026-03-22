@@ -15,24 +15,35 @@ docker compose up
 
 ## Azure deployment
 
-### Option 1: Azure Developer CLI (recommended)
+### Option 1: Foundry hosted (recommended)
+
+Deploy to [Azure AI Foundry Agent Service](https://learn.microsoft.com/en-us/azure/foundry/agents/overview) — GA since March 2026. Foundry manages the agent runtime (scaling, observability, security). You only pay for model tokens.
 
 ```bash
 azd up
 ```
 
-This runs Terraform and deploys the container in one command. See [azure.yaml](../azure.yaml) for configuration.
+This provisions AI Foundry with Agent Service enabled (Cosmos DB for thread storage, AI Search for vector store, Storage Account for files) and deploys the agent container.
 
-### Option 2: Terraform + manual deploy
+**What Foundry hosted gives you:**
+- Automatic scaling — no Container Apps to manage
+- Built-in observability (tracing, evaluations)
+- Enterprise security (VNet, Entra ID, RBAC)
+- 1400+ Logic Apps tool integrations
+- MCP authentication
+- Private networking (zero public egress)
+
+### Option 2: Container Apps (self-hosted)
+
+If you prefer to manage the runtime yourself:
 
 ```bash
+# Via azd
+azd up -- -var="deployment_mode=container_apps"
+
+# Via Terraform directly
 cd infra
-
-# POC (public endpoints, ~10/month)
-terraform apply -var-file=environments/poc.tfvars
-
-# Enterprise (private endpoints, VNet, ~92/month)
-terraform apply -var-file=environments/enterprise.tfvars
+terraform apply -var="deployment_mode=container_apps"
 ```
 
 Then build and push the Docker image:
@@ -59,11 +70,12 @@ Provides durable HTTP endpoints:
 
 ## Infrastructure
 
-See [infra/README.md](../infra/README.md) for Terraform details. Two environment configurations:
+See [infra/README.md](../infra/README.md) for Terraform details.
 
-| | POC | Enterprise |
-|--|-----|-----------|
-| Endpoints | Public | Private |
-| ACR SKU | Basic | Premium |
-| VNet | No | Yes |
-| Estimated cost | ~10/month | ~92/month |
+| | Foundry hosted (default) | Container Apps |
+|--|--------------------------|----------------|
+| Runtime | Managed by Foundry | Self-managed |
+| Scaling | Automatic | Manual / KEDA |
+| Cost | Token-only | ~$10-92/month + tokens |
+| Agent Service | Yes (Cosmos DB, AI Search) | Optional |
+| VNet | Built-in (Standard setup) | Via `enable_private_networking` |

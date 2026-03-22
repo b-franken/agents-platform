@@ -52,10 +52,27 @@ variable "model_capacity" {
   description = "Token-per-minute capacity (in thousands) for model deployments."
 }
 
+variable "enable_agent_service" {
+  type        = bool
+  default     = true
+  description = "Enable Azure AI Foundry Agent Service (creates Cosmos DB, AI Search, and Storage for agent runtime). Set to false for model-only deployments."
+}
+
+variable "deployment_mode" {
+  type        = string
+  default     = "foundry"
+  description = "Deployment target: 'foundry' for Foundry hosted agents (recommended, token-only cost), 'container_apps' for self-hosted Container Apps."
+
+  validation {
+    condition     = contains(["foundry", "container_apps"], var.deployment_mode)
+    error_message = "deployment_mode must be 'foundry' or 'container_apps'."
+  }
+}
+
 variable "container_image" {
   type        = string
   default     = "mcr.microsoft.com/k8se/quickstart:latest"
-  description = "Container image for the agent platform. Use the default for initial deploy, then set to your ACR image."
+  description = "Container image for the agent platform. Only used when deployment_mode is 'container_apps'."
 }
 
 variable "tags" {

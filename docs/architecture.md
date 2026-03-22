@@ -82,5 +82,17 @@ The platform uses `FileCheckpointStorage` to persist workflow state. Conversatio
 | CLI (`python -m router.main`) | Local development |
 | DevUI (`uv run devui`) | Browser-based testing |
 | Docker Compose | Container-based development |
-| Azure Container Apps | Production (via Terraform) |
+| Foundry Agent Service | Production — managed runtime, token-only cost (default) |
+| Azure Container Apps | Production — self-hosted alternative |
 | Azure Functions | Serverless production |
+
+### Foundry hosted vs. Container Apps
+
+The default deployment uses **Azure AI Foundry Agent Service** (GA March 2026). This is Microsoft's recommended path: prototype locally with Agent Framework, then deploy to Foundry for production.
+
+```
+Local (uv run) → Foundry hosted (azd up)          # recommended
+               → Container Apps (deployment_mode)  # alternative
+```
+
+Foundry hosted deploys your Agent Framework code as a container that Foundry manages. It provisions Cosmos DB (thread storage), AI Search (vector store), and Storage Account (files) automatically via the `create_byor` flag in the AVM module.

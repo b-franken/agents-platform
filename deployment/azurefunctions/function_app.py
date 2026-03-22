@@ -1,12 +1,10 @@
 """Azure Functions deployment for the agent platform.
 
-Provides durable HTTP endpoints for the HandoffBuilder workflow:
-    POST /api/workflow/run           — start a conversation
-    GET  /api/workflow/status/{id}   — check status
-    POST /api/workflow/respond/...   — HITL response
+Exposes the HandoffBuilder workflow as durable Azure Functions
+with automatic HTTP endpoints and state persistence.
 
 Setup:
-    pip install agent-framework-azurefunctions --pre
+    pip install -r requirements.txt
     func start
 
 Docs: https://learn.microsoft.com/en-us/agent-framework/integrations/azure-functions
@@ -15,13 +13,12 @@ Docs: https://learn.microsoft.com/en-us/agent-framework/integrations/azure-funct
 from __future__ import annotations
 
 from agent_core.factory import create_client
-from agent_framework.azurefunctions import AgentFunctionApp
+from agent_framework.azure import AgentFunctionApp
 from dotenv import load_dotenv
 from router.config import TRIAGE_INSTRUCTIONS, build_registry
 
 load_dotenv()
 
-# Build the workflow
 registry = build_registry()
 client = create_client()
 
@@ -38,5 +35,4 @@ workflow = registry.build_handoff_workflow(
     triage_agent=triage,
 )
 
-# Register with Azure Functions
-app = AgentFunctionApp(workflow=workflow)
+app = AgentFunctionApp(workflow=workflow, enable_health_check=True)

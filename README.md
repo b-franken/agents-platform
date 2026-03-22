@@ -213,15 +213,29 @@ agents-platform/
 | DevUI | Browser-based testing | `uv run devui --port 8080` |
 | Docker | Containerized dev | `docker compose up` |
 | azd | One-command Azure deploy | `azd up` |
-| Terraform | Infrastructure only | `terraform apply -var-file=environments/poc.tfvars` |
+| Terraform | Infrastructure only | `terraform apply` |
 | Azure Functions | Serverless production | `func start` |
+
+### Production deployment
+
+The default deployment uses **Azure AI Foundry Agent Service** (GA since March 2026). Foundry manages the agent runtime — scaling, observability, enterprise security — you only pay for model tokens.
+
+```bash
+# Default: Foundry hosted (recommended)
+azd up
+
+# Alternative: self-hosted Container Apps
+azd up -- -var="deployment_mode=container_apps"
+```
+
+See [docs/deployment.md](docs/deployment.md) for details.
 
 <details>
 <summary><strong>Cost estimate</strong></summary>
 
 - **Development**: ~$5-10/month (Azure AI Foundry + GPT-4.1-mini for routing)
-- **POC deployment**: ~$10/month (Basic ACR, public endpoints)
-- **Enterprise**: ~$92/month (Premium ACR, private endpoints, VNet)
+- **Foundry hosted**: Token cost only — no hosting fees, Foundry manages runtime
+- **Container Apps (alternative)**: ~$10-92/month depending on networking
 - **Clean up**: `azd down` or `terraform destroy`
 
 See [docs/cost-optimization.md](docs/cost-optimization.md) for model selection tips.
